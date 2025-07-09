@@ -16,7 +16,7 @@ import { CreateReunioesDto } from './dto/create-reunioes.dto';
 import { UpdateReunioesDto } from './dto/update-reunioes.dto';
 import { Reuniao } from './entities/reunioes.entity';
 import { AuthGuard } from '@nestjs/passport';
-import { JwtAuthGuard } from 'src/auth/dto/jw.guard';
+import { JwtAuthGuard } from 'src/auth/guards/jw.guard';
 
 @Controller('reunioes')
 export class ReunioesController {

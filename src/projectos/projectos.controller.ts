@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { ProjectosService } from './projectos.service';
 import { CreateProjectoDto } from './dto/create-projecto.dto';
-import { JwtAuthGuard } from 'src/auth/dto/jw.guard';
+import { JwtAuthGuard } from 'src/auth/guards/jw.guard';
 
 @UseGuards(JwtAuthGuard)
 @Controller('projectos')

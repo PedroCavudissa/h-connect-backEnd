@@ -16,6 +16,7 @@ import { JwtStrategy } from './jw.startagy';
       signOptions: { expiresIn: '1d' },
     }),
     UsuarioModule,
+   
   ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],

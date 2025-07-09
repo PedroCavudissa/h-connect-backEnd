@@ -3,6 +3,7 @@ import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto'; 
 import { OneToMany } from 'typeorm';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 
 @Controller("usuarios")
@@ -13,7 +14,7 @@ export class UsuarioController {
   findAll() {
     return this.usuarioService.findAll();
   }
-
+  @Public()
   @Post()
   async criarUsuario(@Body() dto: CreateUsuarioDto) {
     return this.usuarioService.create(dto);
