@@ -10,5 +10,6 @@ import { ConexaoController } from './conexao.controller';
   imports: [TypeOrmModule.forFeature([Conexao, Usuario])],
   controllers: [ConexaoController],
   providers: [ConexaoService],
+  exports: [TypeOrmModule]
 })
 export class ConexaoModule {}

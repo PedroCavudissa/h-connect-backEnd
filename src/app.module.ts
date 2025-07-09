@@ -7,6 +7,13 @@ import { Role } from './role/entities/role.entity';
 import { AuthModule } from './auth/auth.module';
 import { ConexaoModule } from './conexao/conexao.module';
 import {Conexao} from './conexao/entities/conexao.entity'
+import { ProjectosModule } from './projectos/projectos.module';
+import { Projecto } from './projectos/entities/projecto.entity';
+import { ReunioesModule } from './reunioes/reunioes.module';
+import { PublicacaoModule } from './publicacao/publicacao.module';
+import { CurtidaModule } from './curtida/curtida.module';
+import { ComentarioModule } from './comentario/comentario.module';
+
 
 
 @Module({
@@ -18,11 +25,17 @@ import {Conexao} from './conexao/entities/conexao.entity'
       username: 'root',
       password: '',
       database: 'h_connect',
-      entities: [Usuario, Role,Conexao],
+      entities: [__dirname + '/**/*.entity{.ts,.js}',],
       synchronize: true, // usar apenas em desenvolvimento!
     }),
     UsuarioModule,
-    RoleModule,AuthModule, ConexaoModule
+    RoleModule,AuthModule, 
+    ConexaoModule, 
+    ProjectosModule,
+     ReunioesModule, 
+     PublicacaoModule, 
+     CurtidaModule, 
+     ComentarioModule
   ],
 })
 export class AppModule {}

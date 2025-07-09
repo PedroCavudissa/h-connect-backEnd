@@ -1,6 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert, OneToMany } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert, OneToMany, ManyToMany ,JoinTable} from "typeorm";
 import { Conexao } from '../../conexao/entities/conexao.entity';
-
+import { Projecto } from "../../projectos/entities/projecto.entity";
+import { Reuniao } from "../../reunioes/entities/reunioes.entity";
+import { Publicacao } from "src/publicacao/entities/publicacao.entity";
+import { Comentario } from "src/comentario/entities/comentario.entity";
 
 @Entity("usuarios")
 export class Usuario {
@@ -33,7 +36,24 @@ export class Usuario {
   
   @OneToMany(() => Conexao, conexao => conexao.conectado)
   solicitacoesRecebidas: Conexao[];
+
+ 
+  @OneToMany(() => Reuniao, reuniao => reuniao.criador)
+  reunioesCriadas: Reuniao[];
   
-  
-  
+  @ManyToMany(() => Reuniao, reuniao => reuniao.participantes)
+  reunioesParticipadas: Reuniao[];
+
+  @OneToMany(() => Publicacao, publicacao => publicacao.usuario)
+publicacao: Publicacao[];
+
+@OneToMany(() => Comentario, comentario => comentario.usuario)
+comentarios: Comentario[];
+
+
+@ManyToMany(() => Projecto, projeto => projeto.participantes)
+  projectosParticipa: Projecto[];
+
+  @OneToMany(() => Projecto, projeto => projeto.criador)
+  projectosCriados: Projecto[];
 }

@@ -1,9 +1,11 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Conexao } from './entities/conexao.entity';
-import { Usuario } from '../usuario/entities/usuario.entity';
-
 
 @Injectable()
 export class ConexaoService {
@@ -15,16 +17,16 @@ export class ConexaoService {
   async criarPedido(usuario_id: number, conectado_id: number) {
     const existe = await this.conexaoRepo.findOne({
       where: [
-        { usuario_id, conectado_id },
-        { usuario_id: conectado_id, conectado_id: usuario_id },
+        { usuario: { id: usuario_id }, conectado: { id: conectado_id } },
+        { usuario: { id: conectado_id }, conectado: { id: usuario_id } },
       ],
     });
 
     if (existe) throw new ConflictException('Já existe pedido ou conexão.');
 
     const conexao = this.conexaoRepo.create({
-      usuario_id,
-      conectado_id,
+      usuario: { id: usuario_id },
+      conectado: { id: conectado_id },
       status: 'pendente',
     });
 
@@ -33,16 +35,27 @@ export class ConexaoService {
 
   async listarPendentes(userId: number) {
     return this.conexaoRepo.find({
-      where: { conectado_id: userId, status: 'pendente' },
+      where: {
+        conectado: { id: userId },
+        status: 'pendente',
+      },
+      relations: ['usuario'],
     });
   }
 
   async listarAceitas(userId: number) {
     return this.conexaoRepo.find({
       where: [
-        { usuario_id: userId, status: 'aceito' },
-        { conectado_id: userId, status: 'aceito' },
+        {
+          usuario: { id: userId },
+          status: 'aceito',
+        },
+        {
+          conectado: { id: userId },
+          status: 'aceito',
+        },
       ],
+      relations: ['usuario', 'conectado'],
     });
   }
 
@@ -60,14 +73,40 @@ export class ConexaoService {
     return this.conexaoRepo.save(c);
   }
 
-  async buscarPorUsuario(id: number): Promise<Conexao[]> {
+  async buscarPorUsuario(id: number) {
     return this.conexaoRepo.find({
-
       where: [
-        { usuario_id: id },
-        { conectado_id: id }
+        { usuario: { id } },
+        { conectado: { id } },
       ],
-      relations: ['usuario', 'conectado']
+      relations: ['usuario', 'conectado'],
+    });
+  }
+
+  async remover(id: number) {
+    const result = await this.conexaoRepo.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException('Conexão não encontrada ou já removida');
+    }
+    return { message: 'Conexão removida com sucesso' };
+  }
+
+  async listarRelacoesDoUsuario(usuarioId: number) {
+    const conexoes = await this.conexaoRepo.find({
+      where: [
+        { usuario: { id: usuarioId } },
+        { conectado: { id: usuarioId } },
+      ],
+      relations: ['usuario', 'conectado'],
+    });
+  
+    return conexoes.map(c => {
+      const outro = c.usuario.id === usuarioId ? c.conectado : c.usuario;
+      return {
+        id: outro.id,
+        nome: outro.nome, 
+        status: c.status,
+      };
     });
   }
   

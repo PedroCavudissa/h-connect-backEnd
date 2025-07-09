@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param, Patch, Get } from '@nestjs/common';
+import { Controller, Post, Body, Param, Patch, Get , Delete} from '@nestjs/common';
 import { ConexaoService } from './conexao.service';
 
 @Controller('conexoes')
@@ -33,5 +33,14 @@ export class ConexaoController {
 findByUsuario(@Param('id') id: number) {
   return this.conexaoService.buscarPorUsuario(id);
 }
+@Delete(':id/')
+remover(@Param('id') id: number) {
+  return this.conexaoService.remover(id);
+}
+@Get('relacoes/:usuarioId')
+listarRelacoes(@Param('usuarioId') usuarioId: number) {
+  return this.conexaoService.listarRelacoesDoUsuario(usuarioId);
+}
+
 
 }
